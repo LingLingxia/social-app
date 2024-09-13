@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { login } from '@/utils/authApi';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,13 +12,20 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    setMessage(data.message);
+    // const res = await fetch('/api/auth/login', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ email, password }),
+    // });
+    // const data = await res.json();
+
+    const result = await login({ email, password })
+    if(result.success){
+      setMessage(result.data.message);
+    }else{
+      console.error(result.message)
+    }
+
   };
 
   return (
