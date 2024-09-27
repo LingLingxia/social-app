@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Box, Container, Grid, Card, CardContent, Typography, IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
-import { getPosts } from '@/utils/fn';
+import { getPosts } from '@/utils/apis';
+import { useRouter } from 'next/navigation';
+
 
 // const posts = Array.from({ length: 10 }, (_, i) => ({
 //   title: 'Title ' + i,
@@ -16,6 +18,7 @@ import { getPosts } from '@/utils/fn';
 
 const PostList: React.FC = () => {
   const [posts,setPosts] = useState<any[]>([]);
+  const router = useRouter()
   useEffect(()=>{
      getPosts().then((data:any)=>{
         if(data.success){
@@ -24,6 +27,10 @@ const PostList: React.FC = () => {
         
      })
   },[])
+
+const toDetail = ()=>{
+  router.push("/post/detail")
+}
   return (
     <Container>
       <Box sx={{ my: 4 }}>
@@ -31,14 +38,14 @@ const PostList: React.FC = () => {
           {posts.map((post, index) => (
             <Grid item xs={12} sm={6} key={index}>
               <Card>
-                <CardContent>
+                <CardContent onClick={toDetail}>
                   <Typography variant="h6" gutterBottom>
                     {post.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
                     {post.message}
                   </Typography>
-                  {/* 如果未来有图片，可以在这里插入图片逻辑 */}
+
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
                     <Box>
                       <IconButton aria-label="like">

@@ -17,3 +17,28 @@ export async function GET(req: Request) {
     return NextResponse.json({ list }, { status: 201 });
 
 }
+
+//transfer this api as a auth api
+export async function POST(req: Request) {
+    try{
+        const data = await req.json();
+    
+        const { title, description,image} = data;
+        return NextResponse.json({ 
+            message:"Post created successfully",
+            data:{
+                title,
+                description,
+                image
+            }
+         }, { status: 200 });
+    } catch (error) {
+        console.error('Error parsing request:', error);
+        return NextResponse.json(
+            { error: 'Failed to parse request' },
+            { status: 400 }
+        );
+    }
+ 
+
+}

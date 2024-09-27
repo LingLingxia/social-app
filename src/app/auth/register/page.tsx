@@ -3,7 +3,8 @@
 
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
-import { register } from '@/utils/authApi';
+import { register } from '@/utils/apis';
+
 
 
 const Register = () => {

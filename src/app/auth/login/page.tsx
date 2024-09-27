@@ -3,8 +3,9 @@
 
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
-import { login } from '@/utils/authApi';
+
 import { useRouter } from 'next/navigation';
+import { login } from '@/utils/apis';
 
 const Login = () => {
   const router = useRouter();

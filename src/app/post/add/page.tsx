@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import { createPost } from '@/utils/apis';
 
 const CreatePost = () => {
   const router = useRouter();
@@ -20,9 +21,13 @@ const CreatePost = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    //todo: upload file 
+    //todo: add user id 
     console.log({ title, description, image });
-    router.push('/');
+    createPost({title, description, image}).then(data=>{
+      console.log(data);
+    })
+    
+   // router.push('/'); todo: redirect to detail page
   };
 
   const handleCancel = () => {
