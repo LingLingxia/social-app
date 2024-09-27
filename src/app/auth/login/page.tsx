@@ -4,10 +4,12 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
 import { login } from '@/utils/authApi';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const router = useRouter();
+  const [email, setEmail] = useState('test@abc.com');
+  const [password, setPassword] = useState('1234');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,6 +23,7 @@ const Login = () => {
 
     const result = await login({ email, password })
     if(result.success){
+      router.push("/post")
       setMessage(result.data.message);
     }else{
       console.error(result.message)
