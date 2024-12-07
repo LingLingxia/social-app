@@ -29,13 +29,18 @@ const PostDetail = () => {
     }
   };
 
+  const goBack = ()=>{
+    router.push("/post")
+  }
   if (!post) return <Typography>Loading...</Typography>;
 
   return (
     <Box sx={{ p: 4 }}>
 
       <Typography variant="h3" gutterBottom>
-        {post.title}
+      <Button variant="outlined" size="small" onClick={goBack}>
+          Back
+        </Button>  {post.title} 
       </Typography>
 
 
@@ -66,6 +71,9 @@ const PostDetail = () => {
         </Typography>
         <Button variant="outlined" size="small">
           Like
+        </Button>
+        <Button variant="outlined" size="small">
+          Delete 
         </Button>
       </Stack>
 

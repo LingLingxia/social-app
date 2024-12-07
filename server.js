@@ -1,9 +1,12 @@
 const express = require('express');
 const next = require('next');
+const mongoose = require("mongoose");
+const uri = require("./src/config/db.ts")
 
 const dev = process.env.NODE_ENV !== 'production'; // 判断是否为开发模式
 const app = next({ dev }); // 初始化 Next.js
 const handle = app.getRequestHandler(); // 处理 Next.js 的页面请求
+mongoose.connect(uri,{'dbName':'socialApp'});
 
 app.prepare().then(() => {
   const server = express();
