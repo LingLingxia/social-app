@@ -24,6 +24,7 @@ const CreatePost = () => {
     //todo: add user id 
     console.log({ title, description, image });
     createPost({title, description, image}).then(data=>{
+      router.push('/post');
       console.log(data);
     })
     

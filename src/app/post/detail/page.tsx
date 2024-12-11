@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Box, Typography, Button, Stack, TextField, Avatar } from '@mui/material';
 import { getPost } from '@/utils/apis';
 
+
 const PostDetail = () => {
   const router = useRouter();
   const [post, setPost] = useState<any>(null); 
@@ -11,14 +12,22 @@ const PostDetail = () => {
   const [newComment, setNewComment] = useState(''); 
 
   useEffect(() => {
-        getPost("1").then(data=>{
-            console.log(data);
-            setPost({
-                title:"this is a title",
-                description:"this is a description",
-                image:"",
-                likeCount:"2",
+    //todo: extra it as an util
+      const url = new URL(location.href);
+      const params = new URLSearchParams(url.search);
+      const id:string = params.get("id") || "";
+        getPost(id).then(({success,data:result})=>{
+          const data = result.data;
+            if(success){
+              setPost({
+                title:data.title,
+                description:data.message,
+                image:data.picture,
+                likeCount:data.likeCount,
             })
+            }
+
+
         })
   }, []);
 
