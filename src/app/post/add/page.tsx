@@ -1,9 +1,10 @@
 // pages/createpost.tsx
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TextField, Button, Box, Typography, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { createPost } from '@/utils/apis';
+import { createPost, editPost, getPost } from '@/utils/apis';
+import { getUrlParams } from '@/utils/utilFn';
 
 const CreatePost = () => {
   const router = useRouter();
@@ -13,6 +14,28 @@ const CreatePost = () => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
 
+  const postId = useRef("");
+  const postItem = useRef(null);
+
+  useEffect(()=>{
+    const params =  getUrlParams(location.href);
+    const id:string = params.get("id") || "";
+    if(id){
+      postId.current = id;
+      
+      getPost(id).then(({success,data:result})=>{
+        const data = result.data;
+          if(success){
+            postItem.current = data
+            setTitle(data.title);
+            setDescription(data.message);
+            setImage(data.image);
+          }
+
+
+      })
+    }
+  },[])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -23,12 +46,19 @@ const CreatePost = () => {
     e.preventDefault();
     //todo: add user id 
     console.log({ title, description, image });
-    createPost({title, description, image}).then(data=>{
-      router.push('/post');
-      console.log(data);
-    })
-    
-   // router.push('/'); todo: redirect to detail page
+    if(postId.current){
+    //@ts-ignore
+      editPost({...postItem.current,title,message:description,image}).then(data=>{
+        console.log(data);
+        router.push('/post');
+      })
+    }else{
+      createPost({title, description, image}).then(data=>{
+        router.push('/post');
+        console.log(data);
+      })
+    }
+
   };
 
   const handleCancel = () => {

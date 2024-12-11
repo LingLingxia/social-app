@@ -1,21 +1,23 @@
 "use client"
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Typography, Button, Stack, TextField, Avatar } from '@mui/material';
-import { getPost } from '@/utils/apis';
-
+import { deletePost, getPost } from '@/utils/apis';
+import { getUrlParams } from '@/utils/utilFn';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
 
 const PostDetail = () => {
   const router = useRouter();
   const [post, setPost] = useState<any>(null); 
   const [comments, setComments] = useState<string[]>([]); 
   const [newComment, setNewComment] = useState(''); 
-
+  const [showAlert,setShowAlert] = useState(false);
+  const postId = useRef("");
   useEffect(() => {
-    //todo: extra it as an util
-      const url = new URL(location.href);
-      const params = new URLSearchParams(url.search);
+     const params =  getUrlParams(location.href);
       const id:string = params.get("id") || "";
+      postId.current = id;
         getPost(id).then(({success,data:result})=>{
           const data = result.data;
             if(success){
@@ -41,15 +43,33 @@ const PostDetail = () => {
   const goBack = ()=>{
     router.push("/post")
   }
+  const handleDelete = ()=>{
+    deletePost(postId.current).then((data)=>{
+      console.log(data);
+      setShowAlert(true);
+      setTimeout(()=>{
+        router.push("/post")
+      },3000)
+      
+    })
+  }
+  const handleEdit = ()=>{
+    router.push("/post/add?id="+postId.current);
+  }
   if (!post) return <Typography>Loading...</Typography>;
 
   return (
     <Box sx={{ p: 4 }}>
-
+   {showAlert &&  <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+      Delete Success
+    </Alert>}
       <Typography variant="h3" gutterBottom>
       <Button variant="outlined" size="small" onClick={goBack}>
           Back
-        </Button>  {post.title} 
+        </Button> 
+         {post.title} 
+
+
       </Typography>
 
 
@@ -81,9 +101,12 @@ const PostDetail = () => {
         <Button variant="outlined" size="small">
           Like
         </Button>
-        <Button variant="outlined" size="small">
+        <Button variant="outlined" size="small"  onClick={handleDelete}>
           Delete 
         </Button>
+        <Button variant="outlined" size="small"  onClick={handleEdit}>
+          Edit
+        </Button> 
       </Stack>
 
       <Typography variant="h5" gutterBottom>
