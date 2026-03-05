@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Typography, Button, Stack, TextField, Avatar } from '@mui/material';
 import { deletePost, getPost } from '@/utils/apis';
+import useLike from '@/hooks/useLike';
 import { getUrlParams } from '@/utils/utilFn';
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
@@ -13,6 +14,7 @@ const PostDetail = () => {
   const [comments, setComments] = useState<string[]>([]); 
   const [newComment, setNewComment] = useState(''); 
   const [showAlert,setShowAlert] = useState(false);
+  const { like, loading: liking } = useLike();
   const postId = useRef("");
   useEffect(() => {
      const params =  getUrlParams(location.href);
@@ -56,6 +58,10 @@ const PostDetail = () => {
   const handleEdit = ()=>{
     router.push("/post/add?id="+postId.current);
   }
+
+  const handleLike = async () => {
+    await like({ post, setPost, id: postId.current });
+  }
   if (!post) return <Typography>Loading...</Typography>;
 
   return (
@@ -98,8 +104,8 @@ const PostDetail = () => {
         <Typography variant="body2">
           Likes: {post.likeCount}
         </Typography>
-        <Button variant="outlined" size="small">
-          Like
+        <Button variant="outlined" size="small" onClick={handleLike} disabled={liking}>
+          {liking ? 'Liking...' : 'Like'}
         </Button>
         <Button variant="outlined" size="small"  onClick={handleDelete}>
           Delete 
